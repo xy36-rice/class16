@@ -1,0 +1,83 @@
+---
+title: "Class 16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Scenario
+A team of scientists is working to understand the ecological consequences of an ecosystem restoration project. The study involves comparisons between areas where a restoration intervention has been implemented by removing invasive shrubs (restoration) and otherwise similar areas where invasive shrubs are not removed (control).
+
+Each researcher asks a question about how a different component of this ecosystem responds to the restoration intervention with an eye toward making future restoration more effective.
+
+
+## Research questions
+
+### Topic 1: Tree growth
+#### Question: Can native tree saplings be successful even without going to the effort of removing the invasive shrub? 
+Study design: Similarly sized saplings of a native tree species are grown in a plant nursery and then planted in both the restoration and control plots. After 2 years, researchers measure the centimeter change in trunk circumference for each tree.
+
+### Topic 2: Native seedling survival
+#### Question: In the absence of invasive shrubs, will grasses take over the area and halt a natural transition to a native forest ecosystem?
+Study design: In early spring, researchers identify recently germinated seedlings of a native plant species, marking each with a labelled metal tag stuck into the ground. In the fall, the researchers return to record whether the seedling has survived or died. Competition for light from fast-growing grass may reduce survival for the native seedlings.
+
+### Topic 3: Pollination
+#### Question: A rare flower species coexists with the invasive shrub, and these two plants share pollinators. Could restoration have a negative effect on the rare flower by reducing the diversity of bee species that pollinate it?
+Study design: Previous research in this region has shown that there are 10 species of bee that act as pollinators for the rare flower. At plants in both the control and the restoration site, the researchers use timed sessions to observe pollination. Each bee that visits the plant is captured and then identified to species in the lab. The number of bee species from each session is recorded.
+
+### Topic 4: Microbial diversity
+#### Question: Can restoration practices focused on trees also affect soil microorganisms?
+Study design: Two years after the restoration intervention, soil samples from the restoration and control plots are taken into the lab for DNA metabarcoding. This method allows researchers to record the number of species of microbe present in the soil sample.
+
+
+
+### What are the outcome variable data types?
+
+*in no particular order*
+
+Binomial: Discrete. Count of successes out of a known maximum (ie, the number of trials).
+
+Bernoulli: Discrete. Same as binomial but with single trial.
+
+Poisson: Discrete. Count with unknown maximum.
+
+Lognormal: Continuous. values between 0 and infinity. Log-transformed values between negative infinity and infinity.
+
+
+
+### Instructions
+
+1. Load the datasets using this function: load("datasets.RData"). Notice they now appear in the environment tab.
+
+2. Identify which dataset corresponds to your group. The topic that you'll focus on is the breakout group number you're randomly assinged to. I've not labelled columns in a helpful way at all. Use exploratory plots and functions to determine which dataset is for your group. Once you've done this, make a plot with an altered y label that describes the outcome variable.
+
+3. Address your study question using the p-value approach. Convert the study question into a statistical hypothesis. Write out the null and alternative hypotheses. Design a single model that uses 'R speak' (y ~ x) to test this model, and run this model. Write down what the p-value tells you about the null hypothesis.
+
+4. Next, use the model selection approach to test whether restoration affects your outcome variable by creating a second, intercept only model. Use AIC to compare the models. Write down your interpretation. Do you have the same interpretation as in step 3?
+
+5. Use the parameter estimates from the model in step 3 and the appropriate link function to plot the expected (mean) value for the outcome variable in the control and restoration areas.
+
+6. Use the relevant random number generators for your distribution and the parameters fit in the model in step 3 to simulate the same data. Create a plot of these simulated data.
+
+7. Re-do steps 3-4 but with the mle2() function, which involves writing the model in 'math speak'.
+
+
+
+
+*other potentially helpful stuff*
+
+##### Normal model with covariate
+
+m <- mle2(y ~ dnorm(mean = a + b * x, sd = s), start = list(a = mean(y), b = 0, s = sd(y)))
+
+
+##### Binomial model with covariate
+
+m <- mle2(y ~ dbinom(prob=  exp(a + b * x) / (1 + exp(-(a + b * x))), size = n), start = list(a = 0, b = 0))
+
+
+##### Poisson model with covariate
+
+m <- mle2( y ~ dpois(lambda = a + b * x), start = list(a = mean(y), b = 0))
